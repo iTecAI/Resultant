@@ -1,0 +1,63 @@
+.paper {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 4px;
+}
+
+.paper-light {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+        rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+.paper-dark {
+    box-shadow: rgba(0, 0, 0, 0.38) 0px 3px 8px;
+}
+
+.nf {
+    font-size: 28px;
+    color: var(--pt);
+}
+
+* {
+    font-family: "Roboto", sans-serif;
+}
+
+.noselect {
+    user-select: none;
+}
+img.noselect,
+.noselect img {
+    pointer-events: none;
+}
+
+.noscroll::-webkit-scrollbar {
+    display: none;
+}
+
+.noscroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.btn-add {
+    position: absolute;
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    background-color: var(--p);
+    color: var(--pt);
+    border-radius: 50%;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-add:hover {
+    background-color: var(--pd);
+}
+.btn-add .nf {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 20px;
+    color: var(--pt);
+    transform: translate(-50%, -50%);
+}

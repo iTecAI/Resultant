@@ -1,7 +1,11 @@
 from plugins import *
-from utils import load_all, timer
+from utils import load_all, timer, e
 import json
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from tinydb import TinyDB
+import os
+from logging import basicConfig, debug, info, warning, error, critical, exception
+from starlette.status import *
 
 if __name__ == "__main__":
     print("Running tests...")
@@ -18,7 +22,40 @@ if __name__ == "__main__":
 
     exit(0)
 
+with open((os.environ["RESULTANT_CONFIG"] if "RESULTANT_CONFIG" in os.environ.keys() else "_config.json"), "r") as c:
+    config = json.load(c)
+
+basicConfig(
+    level=config["logging"]["level"],
+    format=config["logging"]["format"],
+    style="{",
+)
+
+info("Server online.")
+
+db = TinyDB(config["database"])
+userDb = db.table("users")
+
 app = FastAPI()
+
+@app.middleware("http")
+async def authenticate(request: Request, call_next):
+    root = request.url.path.strip("/").split("/")[0]
+    if root in ["theme", "open", ""]:
+        return await call_next(request)
+    
+    if not "Authorization" in request.headers.keys():
+        return e("Failed to authorize: No authentication token.", HTTP_400_BAD_REQUEST)
+    
+    token_raw = request.headers["Authorization"]
+    if token_raw.split(" ")[0] != "Bearer" or len(token_raw.split(" ")) != 2:
+        return e("Failed to authorize: Bad authentication header.", HTTP_400_BAD_REQUEST)
+    
+    
+
+    
+    
+
     
 
 

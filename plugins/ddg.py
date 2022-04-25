@@ -12,7 +12,12 @@ class DDGResult(SearchResult):
         return {
             "type": self.TYPE,
             "location": "main",
-            "href": self.link,
+            "actions": [
+                {
+                    "type": "link",
+                    "target": self.link
+                }
+            ],
             "elements": [
                 {
                     "type": "header",
@@ -40,7 +45,12 @@ class DDGNoClick(SearchResult):
         return {
             "type": self.TYPE,
             "location": "noclick",
-            "href": self.link,
+            "actions": [
+                {
+                    "type": "link",
+                    "target": self.link
+                }
+            ],
             "elements": [
                 {
                     "type": "header",

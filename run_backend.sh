@@ -1,1 +1,0 @@
-uvicorn main:app --port 3001 --reload

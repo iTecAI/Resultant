@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 _*.json
 node_modules
+keycloak_test.py

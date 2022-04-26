@@ -2,5 +2,5 @@ fastapi
 requests
 bs4
 uvicorn
-python-keycloak
+keycloak-basic
 tinydb

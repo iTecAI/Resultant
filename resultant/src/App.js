@@ -1,15 +1,37 @@
-import keycloak from "./utilities/auth";
-import { ReactKeycloakProvider } from "@react-keycloak/web";
 import { useEffect } from "react";
+import ThemeProvider from "./utilities/themeProvider";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./pages/layout/Layout";
+import PageLogin from "./pages/login/Login";
+import Index from "./pages/index/Index";
+import Cookies from "js-cookie";
+import { get } from "./utilities/api";
 
 function App() {
     useEffect(() => {
-        keycloak.login();
+        if (!window.location.pathname.includes("/login")) {
+            if (!Cookies.get("Authorization")) {
+                window.location.pathname = "/login";
+            }
+            get("/user/info").then((v) => {
+                if (v.result === "failure") {
+                    window.location.pathname = "/login";
+                }
+                window.localStorage.setItem("userInfo", JSON.stringify(v.info));
+            });
+        }
     }, []);
     return (
-        <ReactKeycloakProvider authClient={keycloak}>
-            <div>boop</div>
-        </ReactKeycloakProvider>
+        <ThemeProvider theme="dark">
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        <Route path="/login" element={<PageLogin />} />
+                        <Route index element={<Index />} />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </ThemeProvider>
     );
 }
 

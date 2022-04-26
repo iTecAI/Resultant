@@ -13,7 +13,8 @@ export async function get(
         {
             method: "GET",
             headers: {
-                "x-fingerprint": localStorage.getItem("fingerprint") || "nofp",
+                Authorization:
+                    "Bearer " + (localStorage.getItem("fingerprint") || ""),
             },
             cache: "no-cache",
             mode: "cors",
@@ -40,8 +41,8 @@ export async function post(
             {
                 method: "POST",
                 headers: {
-                    "x-fingerprint":
-                        localStorage.getItem("fingerprint") || "nofp",
+                    Authorization:
+                        "Bearer " + (localStorage.getItem("fingerprint") || ""),
                     "Content-Type": "application/json",
                 },
                 cache: "no-cache",
@@ -59,8 +60,9 @@ export async function post(
             {
                 method: "POST",
                 headers: {
-                    "x-fingerprint":
-                        localStorage.getItem("fingerprint") || "nofp",
+                    Authorization:
+                        "Bearer " + (localStorage.getItem("fingerprint") || ""),
+                    "Content-Type": "application/json",
                 },
                 cache: "no-cache",
                 mode: "cors",

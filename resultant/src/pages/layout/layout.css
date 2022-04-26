@@ -1,0 +1,45 @@
+.page {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--b);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.nav {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: inline-block;
+    width: 100%;
+    height: 48px;
+    background-color: var(--bd);
+}
+
+.nav .nf {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translate(0, -50%);
+    color: var(--bt);
+}
+.nav .title {
+    position: absolute;
+    top: 50%;
+    left: 50px;
+    transform: translate(0, -50%);
+    color: var(--bt);
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+}
+
+.content {
+    position: absolute;
+    display: inline-block;
+    width: 100%;
+    height: calc(100% - 48px);
+    top: 48px;
+    left: 0px;
+}

@@ -3,4 +3,5 @@ requests
 bs4
 uvicorn
 keycloak-basic
+fastapi-restful
 tinydb

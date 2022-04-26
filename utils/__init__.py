@@ -3,6 +3,7 @@ from .loader import load_all
 from .timers import timer
 from fastapi.responses import JSONResponse
 import random, time, hashlib, base64
+import os, json
 
 
 def e(message: str, code: int):
@@ -19,3 +20,14 @@ def clientToken():
         .hexdigest()
         .encode("utf-8")
     ).decode("utf-8")[:12]
+
+def conf():
+    with open(
+        (
+            os.environ["RESULTANT_CONFIG"]
+            if "RESULTANT_CONFIG" in os.environ.keys()
+            else "_config.json"
+        ),
+        "r",
+    ) as c:
+        return json.load(c)

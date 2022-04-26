@@ -1,5 +1,5 @@
 from plugins import *
-from utils import load_all, timer, e, clientToken
+from utils import load_all, timer, e, clientToken, conf
 import json
 from fastapi import FastAPI, Request
 from tinydb import TinyDB, where
@@ -8,6 +8,9 @@ from logging import basicConfig, debug, info, warning, error, critical, exceptio
 from starlette.status import *
 from keycloak import Keycloak, Token, KeycloakError
 from pydantic import BaseModel
+from fastapi_restful.tasks import repeat_every
+import time
+from api.user import router as UserRouter
 
 if __name__ == "__main__":
     print("Running tests...")
@@ -30,15 +33,7 @@ if __name__ == "__main__":
 
     exit(0)
 
-with open(
-    (
-        os.environ["RESULTANT_CONFIG"]
-        if "RESULTANT_CONFIG" in os.environ.keys()
-        else "_config.json"
-    ),
-    "r",
-) as c:
-    config = json.load(c)
+config = conf()
 
 basicConfig(
     level=config["logging"]["level"],
@@ -67,7 +62,7 @@ keycloak = Keycloak(
 async def authenticate(request: Request, call_next):
     # Check if endpoint is unauthenticated
     root = request.url.path.strip("/").split("/")[0]
-    if root in ["theme", "open", ""]:
+    if root in ["theme", "open", "", "login", "redoc"]:
         return await call_next(request)
 
     # Check validity of request
@@ -137,3 +132,33 @@ async def post_login(model: LoginModel):
         "clientToken": token.content["clientToken"],
         "userInfo": token.info(),
     }
+
+@app.on_event("startup")
+@repeat_every(seconds=60*config["keycloak"]["refreshInterval"])
+def refresh_idle_tokens():
+    """
+    Refresh all tokens provided that they have not been idle for more than [config.keycloak.maxIdleLength] minutes.
+    Removes expired/idle tokens
+    Repeats every [config.keycloak.refreshInterval] minutes
+    """
+    for t in userDb.all():
+        if t["last_auth"] + config["keycloak"]["maxIdleLength"] * 60 < time.time():
+            info(f"Token with clientToken {t['clientToken']} has idled for too long. Removing.")
+            userDb.remove(where("clientToken") == t['clientToken'])
+            continue
+        token: Token = keycloak.load_token(t)
+        if not token.check_auth():
+            info(f"Token with clientToken {token.content['clientToken']} has expired. Removing.")
+            userDb.remove(where("clientToken") == t['clientToken'])
+            continue
+
+@app.get("/theme/{theme}")
+async def get_theme(theme: str):
+    with open(config["themes"], "r") as f:
+        thm = json.load(f)
+        if theme in thm.keys():
+            return {"--"+k: v for k, v in thm[theme].items()}
+        else:
+            return e(f"Failed to locate theme {theme}. Available themes are [{', '.join(thm.keys())}]", HTTP_404_NOT_FOUND)
+
+app.include_router(UserRouter)

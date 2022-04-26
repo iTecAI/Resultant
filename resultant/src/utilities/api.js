@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 export async function get(
     path,
     options = {
@@ -13,8 +15,7 @@ export async function get(
         {
             method: "GET",
             headers: {
-                Authorization:
-                    "Bearer " + (localStorage.getItem("fingerprint") || ""),
+                Authorization: "Bearer " + (Cookies.get("Authorization") || ""),
             },
             cache: "no-cache",
             mode: "cors",
@@ -42,7 +43,7 @@ export async function post(
                 method: "POST",
                 headers: {
                     Authorization:
-                        "Bearer " + (localStorage.getItem("fingerprint") || ""),
+                        "Bearer " + (Cookies.get("Authorization") || ""),
                     "Content-Type": "application/json",
                 },
                 cache: "no-cache",
@@ -61,8 +62,7 @@ export async function post(
                 method: "POST",
                 headers: {
                     Authorization:
-                        "Bearer " + (localStorage.getItem("fingerprint") || ""),
-                    "Content-Type": "application/json",
+                        "Bearer " + (Cookies.get("Authorization") || ""),
                 },
                 cache: "no-cache",
                 mode: "cors",

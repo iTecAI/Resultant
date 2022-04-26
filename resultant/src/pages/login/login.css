@@ -1,0 +1,23 @@
+.login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: inline-block;
+    width: 50%;
+    min-width: 300px;
+    height: fit-content;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    background-color: var(--bd);
+    border-radius: 10px;
+}
+
+.login .login-title {
+    display: block;
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+    color: var(--bt);
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+}

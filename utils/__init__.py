@@ -4,9 +4,11 @@ from .timers import timer
 from fastapi.responses import JSONResponse
 import random, time, hashlib, base64
 import os, json
+import logging
 
 
 def e(message: str, code: int):
+    logging.debug(f"Request error {code} : {message}")
     return JSONResponse(
         content={"result": "failure", "reason": message},
         status_code=code,

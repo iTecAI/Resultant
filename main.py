@@ -60,16 +60,18 @@ keycloak = Keycloak(
 
 @app.middleware("http")
 async def authenticate(request: Request, call_next):
+    #debug(f"Got request to {request.url.path} with headers:\n{json.dumps(request.headers.items(), indent=4)}")
+    
     # Check if endpoint is unauthenticated
     root = request.url.path.strip("/").split("/")[0]
     if root in ["theme", "open", "", "login", "redoc"]:
         return await call_next(request)
 
     # Check validity of request
-    if not "Authorization" in request.headers.keys():
+    if not "authorization" in request.headers.keys():
         return e("Failed to authorize: No authentication token.", HTTP_400_BAD_REQUEST)
 
-    token_raw = request.headers["Authorization"]
+    token_raw = request.headers["authorization"]
     if token_raw.split(" ")[0] != "Bearer" or len(token_raw.split(" ")) != 2:
         return e(
             "Failed to authorize: Bad authentication header.", HTTP_400_BAD_REQUEST
@@ -130,7 +132,7 @@ async def post_login(model: LoginModel):
     return {
         "result": "success",
         "clientToken": token.content["clientToken"],
-        "userInfo": token.info(),
+        "userInfo": token.info().to_dict(),
     }
 
 @app.on_event("startup")

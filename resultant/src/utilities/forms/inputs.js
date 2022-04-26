@@ -94,7 +94,7 @@ export default class Field extends Component {
             icon: props.icon,
             iconClass: props.iconClass,
         };
-        this.setValue(this.props.initialValue || "");
+        this.state.values[this.state.fieldName] = this.props.initialValue || "";
         this.onUpdate = this.props.onUpdate || (() => {});
     }
 

@@ -87,7 +87,7 @@
 }
 .field .field-input .field-entry:hover {
     background-color: var(--bl);
-    border-color: var(--p);
+    border-color: var(--sd);
 }
 .field .field-input .submessage {
     display: none;

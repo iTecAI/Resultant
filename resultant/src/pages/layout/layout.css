@@ -35,11 +35,97 @@
     font-size: 20px;
 }
 
+.nav .profile {
+    position: absolute;
+    right: 48px;
+    top: 50%;
+    transform: translate(0, -50%);
+    display: inline-block;
+    width: fit-content;
+    height: 40px;
+    border-radius: 20px;
+    padding: 11px;
+    padding-right: 48px;
+    padding-left: 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color: var(--b);
+}
+
+.nav .profile .profile-image {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.nav .profile .name {
+    color: var(--bt);
+    font-size: 16px;
+}
+
+.nav .logout {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--p);
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.nav .logout:hover {
+    background-color: var(--pd);
+}
+
+.nav .logout .nf {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: var(--pt);
+}
+
 .content {
     position: absolute;
     display: inline-block;
     width: 100%;
-    height: calc(100% - 48px);
+    height: calc(100% - 72px);
     top: 48px;
     left: 0px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    background-color: var(--bd);
+    display: inline-block;
+    width: 100%;
+    height: 24px;
+    color: var(--bt);
+    font-size: 16px;
+}
+.footer .nf {
+    font-size: 16px;
+}
+.footer > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.footer a, .footer span span {
+    margin-left: 6px;
+    margin-right: 6px;
+    color: var(--bt);
+    vertical-align: middle;
 }

@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 export default function Layout() {
     if (
         window.localStorage.getItem("userInfo") &&
-        window.localStorage.getItem("userInfo") != "undefined"
+        window.localStorage.getItem("userInfo") !== "undefined"
     ) {
         var uinfo = JSON.parse(window.localStorage.getItem("userInfo"));
     }

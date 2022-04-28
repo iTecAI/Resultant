@@ -11,27 +11,7 @@ from pydantic import BaseModel
 from fastapi_restful.tasks import repeat_every
 import time
 from api.user import router as UserRouter
-
-if __name__ == "__main__":
-    print("Running tests...")
-    with open("_config.json", "r") as f:
-        config = json.load(f)
-    plugins = load_all(config)
-
-    print("DDG Plugin test [gurning, amazon]")
-    ddg = plugins["ddg"](
-        "Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0"
-    )
-    r = timer(
-        ddg.search, "[DDG - GURNING - 2 results - has noclick]", "gurning", count=2
-    )
-    print(json.dumps([i.formatted() for i in r], indent=4))
-    r = timer(
-        ddg.search, "[DDG - AMAZON - 30 results - no noclick]", "amazon", count=30
-    )
-    print(json.dumps([i.formatted() for i in r], indent=4))
-
-    exit(0)
+from api.search import router as SearchRouter
 
 config = conf()
 
@@ -57,11 +37,10 @@ keycloak = Keycloak(
     ),
 )
 
-
 @app.middleware("http")
 async def authenticate(request: Request, call_next):
-    #debug(f"Got request to {request.url.path} with headers:\n{json.dumps(request.headers.items(), indent=4)}")
-    
+    # debug(f"Got request to {request.url.path} with headers:\n{json.dumps(request.headers.items(), indent=4)}")
+
     # Check if endpoint is unauthenticated
     root = request.url.path.strip("/").split("/")[0]
     if root in ["theme", "open", "", "login", "redoc"]:
@@ -128,15 +107,17 @@ async def post_login(model: LoginModel):
         )
 
     token.content["clientToken"] = clientToken()
+    token.content["userInfo"] = token.info().to_dict()
     userDb.insert(token.content)
     return {
         "result": "success",
         "clientToken": token.content["clientToken"],
-        "userInfo": token.info().to_dict(),
+        "userInfo": token.content["userInfo"],
     }
 
+
 @app.on_event("startup")
-@repeat_every(seconds=60*config["keycloak"]["refreshInterval"])
+@repeat_every(seconds=60 * config["keycloak"]["refreshInterval"])
 def refresh_idle_tokens():
     """
     Refresh all tokens provided that they have not been idle for more than [config.keycloak.maxIdleLength] minutes.
@@ -145,22 +126,32 @@ def refresh_idle_tokens():
     """
     for t in userDb.all():
         if t["last_auth"] + config["keycloak"]["maxIdleLength"] * 60 < time.time():
-            info(f"Token with clientToken {t['clientToken']} has idled for too long. Removing.")
-            userDb.remove(where("clientToken") == t['clientToken'])
+            info(
+                f"Token with clientToken {t['clientToken']} has idled for too long. Removing."
+            )
+            userDb.remove(where("clientToken") == t["clientToken"])
             continue
         token: Token = keycloak.load_token(t)
         if not token.check_auth():
-            info(f"Token with clientToken {token.content['clientToken']} has expired. Removing.")
-            userDb.remove(where("clientToken") == t['clientToken'])
+            info(
+                f"Token with clientToken {token.content['clientToken']} has expired. Removing."
+            )
+            userDb.remove(where("clientToken") == t["clientToken"])
             continue
+
 
 @app.get("/theme/{theme}")
 async def get_theme(theme: str):
     with open(config["themes"], "r") as f:
         thm = json.load(f)
         if theme in thm.keys():
-            return {"--"+k: v for k, v in thm[theme].items()}
+            return {"--" + k: v for k, v in thm[theme].items()}
         else:
-            return e(f"Failed to locate theme {theme}. Available themes are [{', '.join(thm.keys())}]", HTTP_404_NOT_FOUND)
+            return e(
+                f"Failed to locate theme {theme}. Available themes are [{', '.join(thm.keys())}]",
+                HTTP_404_NOT_FOUND,
+            )
+
 
 app.include_router(UserRouter)
+app.include_router(SearchRouter)

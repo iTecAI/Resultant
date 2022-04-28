@@ -3,13 +3,24 @@ class Plugin:
     DISPLAY_NAME: str = "" # Display name
     DISPLAY_ICON: list[str] = ["mdi", "search_web"] # Icon specification
     TAB: bool = True # Whether this plugin should appear in a separate tab
-    EXPOSED_OPTIONS: list[dict] = [];
+    EXPOSED_OPTIONS: list[dict] = [] # Options
+    METHODS: list[str] = ["search"] # Methods exposed
 
     def __init__(self, user_agent: str) -> None:
         self.user_agent = user_agent
     
     def search(self, query: str, options: list[dict] = {}, count: int = -1) -> list[dict]:
         return []
+    
+    def get_info(self):
+        return {
+            "name": self.NAME,
+            "displayName": self.DISPLAY_NAME,
+            "icon": self.DISPLAY_ICON,
+            "isTab": self.TAB,
+            "options": self.EXPOSED_OPTIONS,
+            "methods": self.METHODS
+        }
 
 class SearchResult:
     TYPE: str = "default"

@@ -85,6 +85,8 @@ async def authenticate(request: Request, call_next):
             )
 
     request.state.token = token
+    token.content["lastRequest"]
+    userDb.upsert(token.content, where("clientToken") == token.content["clientToken"])
     return await call_next(request)
 
 
@@ -108,6 +110,7 @@ async def post_login(model: LoginModel):
 
     token.content["clientToken"] = clientToken()
     token.content["userInfo"] = token.info().to_dict()
+    token.content["lastRequest"] = time.time()
     userDb.insert(token.content)
     return {
         "result": "success",
@@ -124,8 +127,9 @@ def refresh_idle_tokens():
     Removes expired/idle tokens
     Repeats every [config.keycloak.refreshInterval] minutes
     """
+    info("Checking active users")
     for t in userDb.all():
-        if t["last_auth"] + config["keycloak"]["maxIdleLength"] * 60 < time.time():
+        if t["lastRequest"] + config["keycloak"]["maxIdleLength"] * 60 < time.time():
             info(
                 f"Token with clientToken {t['clientToken']} has idled for too long. Removing."
             )
@@ -137,7 +141,8 @@ def refresh_idle_tokens():
                 f"Token with clientToken {token.content['clientToken']} has expired. Removing."
             )
             userDb.remove(where("clientToken") == t["clientToken"])
-            continue
+        else:
+            userDb.upsert(token.content, where("clientToken") == t["clientToken"])
 
 
 @app.get("/theme/{theme}")

@@ -12,7 +12,7 @@ router = APIRouter(prefix="/user", tags=["users", "authenticated"])
 async def get_user_info(request: Request):
     token: Token = request.state.token
     try:
-        return {"result": "success", "info": token.info().to_dict()}
+        return {"result": "success", "info": token.content["userInfo"]}
     except KeycloakError:
         exception(f"Token {token.content['clientToken']} failed to retrieve user info:\n")
         return e("Unexpected error occurred.", HTTP_500_INTERNAL_SERVER_ERROR)

@@ -128,5 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 _*.json
+userCache.json
 node_modules
 keycloak_test.py

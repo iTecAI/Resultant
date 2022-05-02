@@ -75,7 +75,7 @@ export default class Field extends Component {
         }.bind(this);
         this.setValue = (value) => {
             var vals = this.state.values;
-            vals[this.state.fieldName] = value;
+            vals[this.state.fieldName] = value === "$null" ? "" : value;
             this.setState({ values: vals });
         };
         this.setValues = (values) => {
@@ -155,7 +155,7 @@ export class Select extends Field {
     componentDidUpdate() {
         if (
             this.props.children.length > 0 &&
-            this.state.values[this.state.fieldName] === ""
+            this.state.values[this.state.fieldName] === "$null"
         ) {
             for (var child of this.props.children) {
                 if ((child || {}).props) {
@@ -202,11 +202,10 @@ export function HLine() {
 export class Range extends Field {
     constructor(props = { min: 0, max: 0, step: 1 }) {
         super(props);
-        this.setValue(
+        this.state.values[this.state.fieldName] =
             this.state.values[this.state.fieldName] === ""
                 ? 0
-                : this.state.values[this.state.fieldName]
-        );
+                : this.state.values[this.state.fieldName];
 
         this.getInput = function (e) {
             this.setValue(Number(e.target.value));
@@ -289,11 +288,10 @@ export class Range extends Field {
 export class Switch extends Field {
     constructor(props = { min: 0, max: 0, step: 1 }) {
         super(props);
-        this.setValue(
+        this.state.values[this.state.fieldName] =
             this.state.values[this.state.fieldName] === ""
                 ? false
-                : this.state.values[this.state.fieldName] === true
-        );
+                : this.state.values[this.state.fieldName] === true;
 
         this.getInput = function (e) {
             this.setValue(e.target.checked);

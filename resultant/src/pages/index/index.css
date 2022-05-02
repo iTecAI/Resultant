@@ -68,3 +68,62 @@
 .search .search-btn:hover {
     background-color: var(--bd);
 }
+
+.search .options-area {
+    position: relative;
+    margin-top: 10px;
+    border-radius: 15px;
+    background-color: var(--b);
+    overflow: hidden;
+}
+
+.search .options-area .tabs {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 40px;
+    background-color: var(--bd);
+}
+
+.search .options-area .tabs .tab-button {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: var(--bd);
+    border: none;
+    transition: color 0.2s, background-color 0.2s;
+    overflow: hidden;
+    box-sizing: border-box;
+    cursor: pointer;
+    color: var(--bt);
+}
+
+.search .options-area .tabs .tab-button:hover {
+    background-color: var(--b);
+}
+.search .options-area .tabs .tab-button.selected {
+    background-color: var(--b);
+    color: var(--s);
+    width: fit-content;
+}
+.search .options-area .tabs .tab-button.selected:hover {
+    color: var(--sd);
+}
+
+.search .options-area .tabs .tab-button .nf {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translate(0, -50%);
+    font-size: 20px;
+    color: inherit;
+}
+
+
+.search .options-area .tabs .tab-button .title {
+    margin-left: 40px;
+    margin-right: 10px;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+}

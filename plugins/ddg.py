@@ -63,8 +63,9 @@ class DuckDuckGo(Plugin):
             "name": "region",
             "displayName": "Region",
             "type": "select",
+            "icon": ["mdi", "earth"],
             "options": {
-                "": "All Regions",
+                "$null": "All Regions",
                 "ar-es": "Argentina",
                 "at-de": "Austria",
                 "au-en": "Australia",
@@ -133,8 +134,9 @@ class DuckDuckGo(Plugin):
             "name": "time",
             "displayName": "Time",
             "type": "select",
+            "icon": ["mdi", "clock"],
             "options": {
-                "": "Any Time",
+                "$null": "Any Time",
                 "d": "Past Day",
                 "w": "Past Week",
                 "m": "Past Month",

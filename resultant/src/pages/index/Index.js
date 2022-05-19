@@ -65,9 +65,7 @@ export default function Index() {
     const [tab, setTab] = useState(null);
 
     function searchSend() {
-        get("/search/", { parameters: { query: search } }).then((data) =>
-            sessionStorage.setItem("searchInit", JSON.stringify(data))
-        );
+        window.location = window.location.origin + "/results?q=" + search;
     }
 
     useEffect(() => {

@@ -6,7 +6,7 @@ from keycloak import Token, KeycloakError
 from logging import warning, info, error, exception, debug
 from tinydb import TinyDB, where
 from pydantic import BaseModel
-from concurrent.futures import ThreadPoolExecutor
+import base64
 
 config = conf()
 searchDb = TinyDB(config["database"]).table("search")
@@ -120,6 +120,7 @@ async def search_initialize(r: Request, query: str):
                     "icon": p["info"]["icon"],
                     "url": f"/search/results/{p['info']['name']}/?q={query}"
                 })
+    
     return schema
 
 

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./pages/layout/Layout";
 import PageLogin from "./pages/login/Login";
 import Index from "./pages/index/Index";
+import Results from "./pages/results/Results";
 import Cookies from "js-cookie";
 import { get } from "./utilities/api";
 
@@ -27,6 +28,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route path="/login" element={<PageLogin />} />
+                        <Route path="/results" element={<Results />} />
                         <Route index element={<Index />} />
                     </Route>
                 </Routes>
